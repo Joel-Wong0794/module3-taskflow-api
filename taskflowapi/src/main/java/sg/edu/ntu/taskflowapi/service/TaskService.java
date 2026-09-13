@@ -1,7 +1,9 @@
 package sg.edu.ntu.taskflowapi.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Service;
 
 import sg.edu.ntu.taskflowapi.model.Task;
@@ -11,9 +13,13 @@ import sg.edu.ntu.taskflowapi.repository.TaskRepository;
 public class TaskService {
 
     private final TaskRepository taskRepository;
+    private final ChatClient chatClient;
 
-    public TaskService(TaskRepository taskRepository) {
+    public TaskService(
+            TaskRepository taskRepository,
+            ChatClient.Builder chatClientBuilder) {
         this.taskRepository = taskRepository;
+        this.chatClient = chatClientBuilder.build();
     }
 
     public List<Task> findAllTasks() {
@@ -51,5 +57,31 @@ public class TaskService {
 
         task.setCompleted(true);
         return taskRepository.save(task);
+    }
+
+    public String generateTaskSummary() {
+        List<Task> tasks = findAllTasks();
+
+        String taskDetails = tasks.stream()
+                .map(task -> String.format(
+                        "Task: %s, completed: %s",
+                        task.getTitle(),
+                        task.isCompleted()))
+                .collect(Collectors.joining("\n"));
+
+        String prompt = """
+                You are a helpful task management assistant.
+                Summarise the following tasks in short plain English.
+                Clearly state what is pending and what is completed.
+
+                Tasks:
+                %s
+                """.formatted(taskDetails);
+
+        return chatClient
+                .prompt()
+                .user(prompt)
+                .call()
+                .content();
     }
 }

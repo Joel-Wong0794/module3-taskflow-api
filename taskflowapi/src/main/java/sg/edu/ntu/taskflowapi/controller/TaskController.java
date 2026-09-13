@@ -71,4 +71,9 @@ public class TaskController {
         }
         return ResponseEntity.ok(task);
     }
+
+    @GetMapping("/summary")
+    public ResponseEntity<String> getTaskSummary() {
+        return ResponseEntity.ok(taskService.generateTaskSummary());
+    }
 }
