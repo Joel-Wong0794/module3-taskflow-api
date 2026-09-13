@@ -18,5 +18,7 @@
    F) 04_delete-task
      <img width="739" height="855" alt="04_delete-task" src="https://github.com/user-attachments/assets/faca4e61-58ea-45f9-9673-df4e77e5ff8a" />
 
-3) Optional Task 6 (Spring AI Summary Endpoint) - PENDING 
+3) Optional Task 6 (Spring AI Summary Endpoint) - COMPLETED
+   <img width="713" height="779" alt="image" src="https://github.com/user-attachments/assets/9b5b58de-2541-42f9-ad36-2b4e36e1636a" />
+ 
 
